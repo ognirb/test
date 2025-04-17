@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.dev.services;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.dev.models.Task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,14 @@ public class TaskService {
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     public Task createTask(Task task) {
+        // Set the ID
         task.setId(idGenerator.getAndIncrement());
+
+        // Set the creation date to now if not provided
+        if (task.getCreatedDate() == null) {
+            task.setCreatedDate(LocalDateTime.now());
+        }
+
         taskMap.put(task.getId(), task);
         return task;
     }
