@@ -9,6 +9,8 @@ import express from 'express';
 import { glob } from 'glob';
 import favicon from 'serve-favicon';
 
+import tasksRoutes from './routes/tasks';
+
 const { setupDev } = require('./development');
 
 const env = process.env.NODE_ENV || 'development';
@@ -33,6 +35,8 @@ glob
   .sync(__dirname + '/routes/**/*.+(ts|js)')
   .map(filename => require(filename))
   .forEach(route => route.default(app));
+
+tasksRoutes(app);
 
 setupDev(app, developmentMode);
 
