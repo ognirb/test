@@ -12,8 +12,8 @@ but ultimately it is up to you -->
   to ensure you have both services running. You may want to make use of the Gov UK Components:
   https://design-system.service.gov.uk/components/ to add tabs and so forth :) -->
 
+  {# 
   {% if example.id %}
-
     {{ govukSummaryList({
       rows: [
         {
@@ -116,6 +116,44 @@ but ultimately it is up to you -->
       ]
     }) }}
 
+  {% endif %}
+  #}
+
+  {# Render tasks if present #}
+  {% if tasks and tasks.length %}
+    <h2 class="govuk-heading-l">Tasks</h2>
+    {% for task in tasks %}
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: { text: "ID" },
+            value: { text: task.id }
+          },
+          {
+            key: { text: "Title" },
+            value: { text: task.title }
+          },
+          {
+            key: { text: "Description" },
+            value: { text: task.description }
+          },
+          {
+            key: { text: "Status" },
+            value: { text: task.status }
+          },
+          {
+            key: { text: "Due Date" },
+            value: { text: task.dueDate }
+          },
+          {
+            key: { text: "Created Date" },
+            value: { text: task.createdDate }
+          }
+        ]
+      }) }}
+    {% endfor %}
+  {% else %}
+    <p>No tasks found.</p>
   {% endif %}
 
 {% endblock %}
