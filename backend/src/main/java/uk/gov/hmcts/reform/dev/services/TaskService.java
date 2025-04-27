@@ -45,6 +45,11 @@ public class TaskService {
         return task;
     }
 
+    public Task saveTask(Task task) {
+        taskMap.put(task.getId(), task);
+        return task;
+    }
+
     public boolean deleteTask(Long id) {
         return taskMap.remove(id) != null;
     }

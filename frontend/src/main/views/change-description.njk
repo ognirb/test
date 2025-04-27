@@ -1,0 +1,10 @@
+{% extends "template.njk" %}
+
+{% block content %}
+  <h1>Change Task Description</h1>
+  <form method="post" action="/tasks/{{ id }}/change-description">
+    <label for="description">New Description:</label>
+    <input type="text" id="description" name="description" required>
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}

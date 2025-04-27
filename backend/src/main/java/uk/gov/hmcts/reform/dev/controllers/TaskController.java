@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.dev.models.Task;
 import uk.gov.hmcts.reform.dev.services.TaskService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -18,7 +19,6 @@ public class TaskController {
     @Autowired
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
-        // System.out.println("Task controller initialized");
     }
 
     @PostMapping
@@ -41,14 +41,31 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Task> updateTaskStatus(
+    public ResponseEntity<Task> updateTask(
             @PathVariable Long id,
-            @RequestBody String status) {
-        Task task = taskService.updateTaskStatus(id, status);
-        if (task != null) {
-            return ResponseEntity.ok(task);
+            @RequestBody Map<String, Object> updates) {
+        Task task = taskService.getTask(id);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        if (updates.containsKey("id")) {
+            Long newId = Long.valueOf(updates.get("id").toString());
+            if (!newId.equals(id)) {
+                taskService.deleteTask(id); 
+                task.setId(newId);          //set new id
+            }
+        }
+        if (updates.containsKey("title")) {
+            task.setTitle((String) updates.get("title"));
+        }
+        if (updates.containsKey("description")) {
+            task.setDescription((String) updates.get("description"));
+        }
+        if (updates.containsKey("status")) {
+            task.setStatus((String) updates.get("status"));
+        }
+        taskService.saveTask(task); 
+        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/{id}")
