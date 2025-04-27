@@ -55,5 +55,22 @@ export default function (app: Application): void {
       res.status(500).send('Failed to update id');
     }
   });
-  
+
+  app.get('/tasks/create', (req, res) => {
+    res.render('create-task');
+  });
+
+  app.post('/tasks/create', async (req, res) => {
+    try {
+      await axios.post('http://localhost:4000/api/tasks', {
+        title: req.body.title,
+        description: req.body.description,
+        status: req.body.status,
+        dueDate: req.body.dueDate ? new Date(req.body.dueDate).toISOString() : null
+      });
+      res.redirect('/');
+    } catch (error) {
+      res.status(500).render('error');
+    }
+  });
 }
